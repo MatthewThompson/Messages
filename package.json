@@ -1,0 +1,23 @@
+{
+  "name": "messages",
+  "version": "1.0.0",
+  "description": "A web service which allows users to store and retrieve plain text messages.",
+  "main": "messages.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatthewThompson/Messages.git"
+  },
+  "author": "Matthew Thompson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatthewThompson/Messages/issues"
+  },
+  "homepage": "https://github.com/MatthewThompson/Messages#readme",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "express": "^4.14.1"
+  }
+}
