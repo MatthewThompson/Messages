@@ -29,11 +29,11 @@ app.get("/messages/*/", function (req, res) {
 	});
 	
 	// Read all the contents of the file into the variable 'text'.
-	
 	var text;
 	try {
 		text = fs.readFileSync(filePath);
 	} catch (err) {
+		res.send("Error : No such file exists.");
 		return console.log(err);
 	}
 	
@@ -121,10 +121,8 @@ function setID(id) {
 	
 }
 
-//
+// Start the app by listening on port 3000.
 app.listen(3000, function () {
-	
-	
 	
 	console.log('App listening on port 3000!');
 })
