@@ -23,6 +23,8 @@ app.delete("/messages/*/", function (req, res) {
 		return console.log(err);
 	}
 	
+	res.send("message " + id + " deleted successfully.\n");
+	
 })
 
 // Called when there is a get request.
@@ -57,7 +59,7 @@ app.get("/messages/*/", function (req, res) {
 	
 })
 
-// Called when data is posted to the server.
+// Called when data is posted to the server at domain/messages/. Used to add a message.
 app.post("/messages", function (req, res) {
 	
 	var id = getID(); // Retrieve the id of the next message.
@@ -91,6 +93,42 @@ app.post("/messages", function (req, res) {
 	// Send the id of the created file back to the user.
 	res.send("{\"id\":" + id + "}");
 	setID(parseInt(id) + 1);
+	
+})
+
+// Called when data is posted to the server at domain/messages/id/. Used to update a message.
+app.post("/messages/*/", function (req, res) {
+	
+	var id = req.path.substring(10); // Everything after "/messages/".
+	
+	// Command to send a message: curl -d domain/messages "message"
+	// This means data will be sent in the form {"message : ""}.
+	var text = Object.keys(req.body)[0];
+	
+	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
+	console.log(filePath + " : " + text);
+	
+	// Opens the file for writing, creating it if it does not exist.
+	fs.open(filePath, "r+", (err, fd) => {
+		if (err) {
+			res.send("The requested file does not exist");
+			return console.log(err);
+		}
+		
+		console.log("File: " + filePath + " opened.");
+		
+	});
+	
+	// Writes the message to the file.
+	fs.writeFile(filePath, text, (err) => {
+		if (err) {
+			return console.log(err);
+		}
+		
+		console.log("File saved.");
+	});
+	
+	res.send("File successfully updated.");
 	
 })
 

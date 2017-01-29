@@ -14,3 +14,7 @@ curl domain/messages/id
 
 Delete a message from the server:
 curl domain/messages/id -X "DELETE"
+
+
+Update (overwrite) a message:
+curl domain/messages/id -d "new message"
