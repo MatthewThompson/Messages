@@ -8,19 +8,32 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 
-// Called when...
+// Called when the server gets a delete request.
+app.delete("/messages/*/", function (req, res) {
+	
+	
+	var id = req.path.substring(10); // Everything after "/messages/".
+	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
+	
+	try {
+		fs.unlinkSync(filePath); // Deletes the file.
+		console.log("File: " + filePath + " deleted.");
+	} catch (err) {
+		res.send("Error : No such file exists.\n");
+		return console.log(err);
+	}
+	
+})
+
+// Called when there is a get request.
 app.get("/messages/*/", function (req, res) {
 	
-	console.log('Get method called.');
-	console.log(req.path);
-	
-	var id = req.path.substring(10);
+	var id = req.path.substring(10); // Everything after "/messages/".
 	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
 	
 	// Opens the file for reading.
 	fs.open(filePath, "r", (err, fd) => {
 		if (err) {
-			//res.send("This file does not exist."); // This throws an error.
 			return console.log(err);
 		}
 		
@@ -32,24 +45,28 @@ app.get("/messages/*/", function (req, res) {
 	var text;
 	try {
 		text = fs.readFileSync(filePath);
+		console.log("File: " + filePath + " read.");
 	} catch (err) {
-		res.send("Error : No such file exists.");
+		res.send("Error : No such file exists.\n");
 		return console.log(err);
 	}
 	
 	// Send the text back to the user.
 	res.send(text);
+	res.send("\n");
 	
 })
 
 // Called when data is posted to the server.
 app.post("/messages", function (req, res) {
 	
-	var id = getID();
+	var id = getID(); // Retrieve the id of the next message.
+	
+	// Command to send a message: curl -d domain/messages "message"
+	// This means data will be sent in the form {"message : ""}.
 	var text = Object.keys(req.body)[0];
 	
 	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
-	
 	console.log(filePath + " : " + text);
 	
 	// Opens the file for writing, creating it if it does not exist.
@@ -123,7 +140,6 @@ function setID(id) {
 
 // Start the app by listening on port 3000.
 app.listen(3000, function () {
-	
 	console.log('App listening on port 3000!');
 })
 
