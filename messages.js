@@ -206,18 +206,12 @@ function createSettings() {
 	var filePath = "settings.json";
 	var defaultSettings = "{\"id\":1}";
 	
-	// Opens the file for writing, creating it if it does not exist.
-	fs.open(filePath, "w", (err, fd) => {
-		if (err) {
-			return console.log(err);
-		}
-		
+	try {
+		// Opens the file for writing, creating it if it does not exist.
+		fs.openSync(filePath, "w");
 		console.log("File: " + filePath + " created.");
 		
-	});
-	
-	// Writes the default values to the file.
-	try {
+		// Writes the default values to the file.
 		fs.writeFileSync(filePath, defaultSettings);
 		console.log("Settings file saved.");
 	} catch (err) {
