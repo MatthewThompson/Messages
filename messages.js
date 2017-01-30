@@ -113,25 +113,19 @@ app.post("/messages/*/", function (req, res) {
 	var filePath = "messages/" + id + ".txt";
 	console.log(filePath + " : " + text);
 	
-	// Opens the file for writing, returning an error if it does not exist.
-	fs.open(filePath, "r+", (err, fd) => {
-		if (err) {
-			res.send("The requested file does not exist.\n");
-			return console.log("File " + filePath + " was not updated, file does not exist.");
-		}
-		
+	try {
+		// Opens the file for writing, returning an error if it does not exist.
+		fs.openSync(filePath, "r+");
 		console.log("File: " + filePath + " opened.");
 		
-	});
-	
-	// Writes the message to the file.
-	fs.writeFile(filePath, text, (err) => {
-		if (err) {
-			return console.log(err);
-		}
-		
+		// Writes the message to the file.
+		fs.writeFileSync(filePath, text);
 		console.log("File saved.");
-	});
+		
+	} catch (err) { // Error thrown if the file doesn't exist.
+		res.send("The requested file does not exist.\n");
+		return console.log("File " + filePath + " was not updated, file does not exist.");
+	}
 	
 	res.send("File successfully updated.\n");
 	
@@ -224,6 +218,7 @@ function createSettings() {
 app.listen(3000, function () {
 	console.log('Listening on port 3000...');
 	
+	// Tried to open the settings, and creates it if it does not exist.
 	fs.open("settings.json", "r", (err, fd) => {
 		if (err) {
 			createSettings();
