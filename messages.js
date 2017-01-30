@@ -106,11 +106,11 @@ app.post("/messages/*/", function (req, res) {
 	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
 	console.log(filePath + " : " + text);
 	
-	// Opens the file for writing, creating it if it does not exist.
+	// Opens the file for writing, returning an error if it does not exist.
 	fs.open(filePath, "r+", (err, fd) => {
 		if (err) {
-			res.send("The requested file does not exist");
-			return console.log(err);
+			res.send("The requested file does not exist.\n");
+			return console.log("File " + filePath + " was not updated, file does not exist.");
 		}
 		
 		console.log("File: " + filePath + " opened.");
@@ -126,7 +126,7 @@ app.post("/messages/*/", function (req, res) {
 		console.log("File saved.");
 	});
 	
-	res.send("File successfully updated.");
+	res.send("File successfully updated.\n");
 	
 })
 
@@ -154,6 +154,7 @@ function getID() {
 	
 	fs.open(filePath, "r", (err, fd) => {
 		if (err) {
+			// If the settings file doesn't exist, create it and return the default ID (1).
 			createSettings();
 			return 1;
 		}
@@ -221,7 +222,7 @@ function createSettings() {
 
 // Start the app by listening on port 3000.
 app.listen(3000, function () {
-	console.log('App listening on port 3000!');
+	console.log('Listening on port 3000...');
 })
 
 
