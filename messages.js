@@ -32,24 +32,20 @@ app.get("/messages/*/", function (req, res) {
 	var id = getIDfromURL(req.path);
 	var filePath = "messages/" + id + ".txt";
 	
-	// Opens the file for reading.
-	fs.open(filePath, "r", (err, fd) => {
-		if (err) {
-			return console.log(err);
-		}
-		
-		console.log("File: " + filePath + " opened.");
-		
-	});
-	
-	// Read all the contents of the file into the variable 'text'.
 	var text;
 	try {
+		// Opens the file for reading.
+		fs.openSync(filePath, "r");
+		console.log("File: " + filePath + " opened.");
+		
+		
+		// Read all the contents of the file into the variable 'text'.
 		text = fs.readFileSync(filePath);
 		console.log("File: " + filePath + " read.");
-	} catch (err) {
+	
+	} catch (err) { // User tries to read a message for an id which doesn't exist on the server.
 		res.send("Error : No such file exists.\n");
-		return console.log(err);
+		return console.log("File " + path + " not read, no such file exists.");
 	}
 	
 	// Send the text back to the user.
@@ -75,18 +71,13 @@ app.post("/messages", function (req, res) {
 	var filePath = "messages/" + id + ".txt";
 	console.log(filePath + " : " + text);
 	
-	// Opens the file for writing, creating it if it does not exist.
-	fs.open(filePath, "w", (err, fd) => {
-		if (err) {
-			return console.log(err);
-		}
-		
+	try {
+		// Opens the file for writing, creating it if it does not exist.
+		fs.openSync(filePath, "w");
 		console.log("File: " + filePath + " created.");
 		
-	});
-	
-	// Writes the message to the file.
-	try {
+		
+		// Writes the message to the file.
 		fs.writeFileSync(filePath, text);
 		console.log("File saved.");
 	} catch (err) {
@@ -96,7 +87,6 @@ app.post("/messages", function (req, res) {
 	// Send the id of the created file back to the user.
 	res.send("{\"id\":" + id + "}");
 	id = parseInt(id) + 1;
-	console.log("Setting id to " + id);
 	setID(id);
 	
 })
