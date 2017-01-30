@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.delete("/messages/*/", function (req, res) {
 	
 	var id = getIDfromURL(req.path);
-	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
+	var filePath = "messages/" + id + ".txt";
 	
 	try {
 		fs.unlinkSync(filePath); // Deletes the file.
@@ -30,7 +30,7 @@ app.delete("/messages/*/", function (req, res) {
 app.get("/messages/*/", function (req, res) {
 	
 	var id = getIDfromURL(req.path);
-	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
+	var filePath = "messages/" + id + ".txt";
 	
 	// Opens the file for reading.
 	fs.open(filePath, "r", (err, fd) => {
@@ -60,13 +60,19 @@ app.get("/messages/*/", function (req, res) {
 // Called when data is posted to the server at domain/messages/. Used to add a message.
 app.post("/messages", function (req, res) {
 	
-	var id = getID(); // Retrieve the id of the next message.
+	var id;
+	try {
+		id = getID(); // Retrieve the id of the next message.
+	} catch (err) {
+		id = 1;
+	}
+	
 	
 	// Command to send a message: curl -d domain/messages "message"
 	// This means data will be sent in the form {"message : ""}.
 	var text = Object.keys(req.body)[0];
 	
-	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
+	var filePath = "messages/" + id + ".txt";
 	console.log(filePath + " : " + text);
 	
 	// Opens the file for writing, creating it if it does not exist.
@@ -103,7 +109,7 @@ app.post("/messages/*/", function (req, res) {
 	// This means data will be sent in the form {"message : ""}.
 	var text = Object.keys(req.body)[0];
 	
-	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
+	var filePath = "messages/" + id + ".txt";
 	console.log(filePath + " : " + text);
 	
 	// Opens the file for writing, returning an error if it does not exist.
@@ -150,7 +156,7 @@ function getIDfromURL(URL) {
 // Gets the current ID.
 function getID() {
 	
-	var filePath = "/var/www/html/Messages/settings.json";
+	var filePath = "settings.json";
 	
 	fs.open(filePath, "r", (err, fd) => {
 		if (err) {
@@ -169,7 +175,7 @@ function getID() {
 // Sets the ID to a given value.
 function setID(id) {
 	
-	var filePath = "/var/www/html/Messages/settings.json";
+	var filePath = "settings.json";
 	
 	// Open the settings JSON file.
 	fs.open(filePath, "r+", (err, fd) => {
@@ -196,7 +202,7 @@ function setID(id) {
 // Creates a settings.json file and initiates the values to default. To be called when the file does not exist.
 function createSettings() {
 	
-	var filePath = "/var/www/html/Messages/settings.json";
+	var filePath = "settings.json";
 	var defaultSettings = "{\"id\":1}";
 	
 	// Opens the file for writing, creating it if it does not exist.
