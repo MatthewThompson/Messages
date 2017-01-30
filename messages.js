@@ -11,8 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 // Called when the server gets a delete request.
 app.delete("/messages/*/", function (req, res) {
 	
-	
-	var id = req.path.substring(10); // Everything after "/messages/".
+	var id = getIDfromURL(req.path);
 	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
 	
 	try {
@@ -23,14 +22,14 @@ app.delete("/messages/*/", function (req, res) {
 		return console.log(err);
 	}
 	
-	res.send("message " + id + " deleted successfully.\n");
+	res.send("Message " + id + " deleted successfully.\n");
 	
 })
 
 // Called when there is a get request.
 app.get("/messages/*/", function (req, res) {
 	
-	var id = req.path.substring(10); // Everything after "/messages/".
+	var id = getIDfromURL(req.path);
 	var filePath = "/var/www/html/Messages/messages/" + id + ".txt";
 	
 	// Opens the file for reading.
@@ -54,8 +53,7 @@ app.get("/messages/*/", function (req, res) {
 	}
 	
 	// Send the text back to the user.
-	res.send(text);
-	res.send("\n");
+	res.send(text + "\n");
 	
 })
 
@@ -99,7 +97,7 @@ app.post("/messages", function (req, res) {
 // Called when data is posted to the server at domain/messages/id/. Used to update a message.
 app.post("/messages/*/", function (req, res) {
 	
-	var id = req.path.substring(10); // Everything after "/messages/".
+	var id = getIDfromURL(req.path);
 	
 	// Command to send a message: curl -d domain/messages "message"
 	// This means data will be sent in the form {"message : ""}.
@@ -131,6 +129,23 @@ app.post("/messages/*/", function (req, res) {
 	res.send("File successfully updated.");
 	
 })
+
+// Gets the ID (as a string) from a URL in the form domain/messages/id/
+function getIDfromURL(URL) {
+	
+	var idStr = req.path.substring(10); // Everything after "/messages/".
+	
+	for (var i = 0; i < idStr.length; id++) {
+		
+		if (idStr.charAt(i) == '/') {
+			return idStr.substring(0, i); // Return everything up to the slash.
+		}
+		
+	}
+	
+	return idStr;
+	
+}
 
 // Gets the current ID.
 function getID() {

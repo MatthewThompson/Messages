@@ -2,7 +2,7 @@
 A web service which allows users to store and retrieve plain text messages.
 
 
-Usage:
+##Usage:
 
 Write a message to the server (the message id will be returned):
 curl domain/messages/ -d "the message to store"
