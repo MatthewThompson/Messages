@@ -86,13 +86,12 @@ app.post("/messages", function (req, res) {
 	});
 	
 	// Writes the message to the file.
-	fs.writeFile(filePath, text, (err) => {
-		if (err) {
-			return console.log(err);
-		}
-		
+	try {
+		fs.writeFileSync(filePath, text);
 		console.log("File saved.");
-	});
+	} catch (err) {
+		return console.log(err);
+	}
 	
 	// Send the id of the created file back to the user.
 	res.send("{\"id\":" + id + "}");
