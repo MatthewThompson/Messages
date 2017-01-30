@@ -96,7 +96,9 @@ app.post("/messages", function (req, res) {
 	
 	// Send the id of the created file back to the user.
 	res.send("{\"id\":" + id + "}");
-	setID(parseInt(id) + 1);
+	id = parseInt(id) + 1;
+	console.log("Setting id to " + id);
+	setID(id);
 	
 })
 
