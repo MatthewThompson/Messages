@@ -133,7 +133,7 @@ app.post("/messages/*/", function (req, res) {
 // Gets the ID (as a string) from a URL in the form domain/messages/id/
 function getIDfromURL(URL) {
 	
-	var idStr = req.path.substring(10); // Everything after "/messages/".
+	var idStr = URL.substring(10); // Everything after "/messages/".
 	
 	for (var i = 0; i < idStr.length; id++) {
 		
