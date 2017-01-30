@@ -69,7 +69,7 @@ app.post("/messages", function (req, res) {
 	
 	
 	// Command to send a message: curl -d domain/messages "message"
-	// This means data will be sent in the form {"message : ""}.
+	// This means data will be sent in the form {"message" : ""}.
 	var text = Object.keys(req.body)[0];
 	
 	var filePath = "messages/" + id + ".txt";
@@ -107,7 +107,7 @@ app.post("/messages/*/", function (req, res) {
 	var id = getIDfromURL(req.path);
 	
 	// Command to send a message: curl -d domain/messages "message"
-	// This means data will be sent in the form {"message : ""}.
+	// This means data will be sent in the form {"message" : ""}.
 	var text = Object.keys(req.body)[0];
 	
 	var filePath = "messages/" + id + ".txt";
@@ -192,11 +192,11 @@ function setID(id) {
 	settings.id = id;
 	
 	// Convert the JSON back to a string and write it back to the file.
-	fs.writeFile(filePath, JSON.stringify(settings), (err) => {
-		if (err) {
-			return console.log(err);
-		}
-	}); 
+	try {
+		fs.writeFileSync(filePath, JSON.stringify(settings));
+	} catch (err) {
+		return console.log(err);
+	}
 	
 }
 
