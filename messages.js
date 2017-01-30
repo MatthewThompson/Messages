@@ -19,7 +19,7 @@ app.delete("/messages/*/", function (req, res) {
 		console.log("File: " + filePath + " deleted.");
 	} catch (err) {
 		res.send("Error : No such file exists.\n");
-		return console.log(err);
+		return console.log("Error : " + filePath + " not deleted, no such file exists.\n");
 	}
 	
 	res.send("Message " + id + " deleted successfully.\n");
@@ -154,7 +154,8 @@ function getID() {
 	
 	fs.open(filePath, "r", (err, fd) => {
 		if (err) {
-			return console.log(err);
+			createSettings();
+			return 1;
 		}
 	});
 	
@@ -188,6 +189,33 @@ function setID(id) {
 			return console.log(err);
 		}
 	}); 
+	
+}
+
+// Creates a settings.json file and initiates the values to default. To be called when the file does not exist.
+function createSettings() {
+	
+	var filePath = "/var/www/html/Messages/settings.json";
+	var defaultSettings = "{\"id\":1}";
+	
+	// Opens the file for writing, creating it if it does not exist.
+	fs.open(filePath, "w", (err, fd) => {
+		if (err) {
+			return console.log(err);
+		}
+		
+		console.log("File: " + filePath + " created.");
+		
+	});
+	
+	// Writes the default values to the file.
+	fs.writeFile(filePath, defaultSettings, (err) => {
+		if (err) {
+			return console.log(err);
+		}
+		
+		console.log("Settings file saved.");
+	});
 	
 }
 
