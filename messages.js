@@ -135,7 +135,7 @@ function getIDfromURL(URL) {
 	
 	var idStr = URL.substring(10); // Everything after "/messages/".
 	
-	for (var i = 0; i < idStr.length; id++) {
+	for (var i = 0; i < idStr.length; i++) {
 		
 		if (idStr.charAt(i) == '/') {
 			return idStr.substring(0, i); // Return everything up to the slash.
