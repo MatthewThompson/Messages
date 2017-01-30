@@ -218,13 +218,12 @@ function createSettings() {
 	});
 	
 	// Writes the default values to the file.
-	fs.writeFile(filePath, defaultSettings, (err) => {
-		if (err) {
-			return console.log(err);
-		}
-		
+	try {
+		fs.writeFileSync(filePath, defaultSettings};
 		console.log("Settings file saved.");
-	});
+	} catch (err) {
+			return console.log(err);
+	}
 	
 }
 
